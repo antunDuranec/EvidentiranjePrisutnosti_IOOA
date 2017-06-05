@@ -200,7 +200,7 @@ public class DialogBrisanjeTerminaAdmin extends javax.swing.JDialog {
             Kolegij odabrani = (Kolegij)cmbKolegiji.getSelectedItem();
             Termin odabraniTermin = (Termin) cmbTermin.getSelectedItem();
 
-            controllerTermin.destrojTermin(odabraniTermin.getDatum(), odabraniTermin.getSifra_termina());
+            controllerTermin.destrojTermin(odabraniTermin.getDatum(), odabraniTermin.getSifra_termina(),odabrani.getSifra_kolegija());
             preuzimanjeTerminaPoKolegiju(odabrani.getSifra_kolegija());
 
         } catch (Exception f) {

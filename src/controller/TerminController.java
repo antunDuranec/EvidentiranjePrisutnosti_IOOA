@@ -130,7 +130,7 @@ public class TerminController {
         }
     
         //Brisanje termina iz baze
-         static boolean destroy(Date datum,int sifra_termina) throws Exception {
+         static boolean destroy(Date datum,int sifra_termina,int sifra_kolegija) throws Exception {
        
             try (Connection uspostaviKonekciju = SQLController.kreirajKonekciju()) {
                 
@@ -138,7 +138,7 @@ public class TerminController {
                 String provjeraKoristenjaFK ="SELECT COUNT(*)FROM termin LEFT OUTER JOIN kolegij ON termin.sifra_kolegija=kolegij.sifra_kolegija\n"
                         + "LEFT OUTER JOIN student_na_kolegiju ON student_na_kolegiju.sifra_kolegija=kolegij.sifra_kolegija\n"
                         + "LEFT OUTER JOIN evidencija ON student_na_kolegiju.sifra_studenta_na_kolegiju=evidencija.sifra_studenta_na_kolegiju\n"
-                        + " WHERE evidencija.datum_evidentiranja=?;";
+                        + " WHERE evidencija.datum_evidentiranja=? AND student_na_kolegiju.sifra_kolegija=?;";
                 
 
                 String sql = "DELETE FROM termin WHERE sifra_termina=?;";
@@ -146,6 +146,7 @@ public class TerminController {
                 
                 PreparedStatement stmt1 = uspostaviKonekciju.prepareStatement(provjeraKoristenjaFK);
                 stmt1.setDate(1, (java.sql.Date) datum);
+                stmt1.setInt(2,sifra_kolegija);
                  ResultSet rs = stmt1.executeQuery();
                  rs.first();
             
@@ -178,8 +179,8 @@ public class TerminController {
         return true;
     }
     
-        public boolean destrojTermin(Date datum,int sifra_termina) throws Exception{
-            boolean obrisano = destroy(datum,sifra_termina);
+        public boolean destrojTermin(Date datum,int sifra_termina,int sifra_kolegija) throws Exception{
+            boolean obrisano = destroy(datum,sifra_termina,sifra_kolegija);
             return obrisano;
         }
 }

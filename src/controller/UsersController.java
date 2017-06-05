@@ -113,7 +113,7 @@ public class UsersController {
             try{
                 Connection uspostaviKonekciju = SQLController.kreirajKonekciju();
 
-                String sql =("SELECT * FROM kolegij WHERE sifra_profesora=? ORDER BY naziv;");
+                String sql =("SELECT * FROM kolegij WHERE sifra_profesora=? ORDER BY naziv;");  //
 
                 PreparedStatement stmt = uspostaviKonekciju.prepareStatement(sql);
                 stmt.setInt(1, id);

@@ -25,7 +25,7 @@ public class SQLController {
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             
-            //uspostaviKonekciju = DriverManager.getConnection("jdbc:mysql://ucka.veleri.hr:3306/iperisa?characterEncoding=UTF-8", "loga", "pitajlogu"); Izbirsao sam lozinku -.-
+           // uspostaviKonekciju = DriverManager.getConnection("jdbc:mysql://ucka.veleri.hr:3306/iperisa?characterEncoding=UTF-8", "iperisa", "67671666");
             uspostaviKonekciju = DriverManager.getConnection("jdbc:mysql://localhost/evidencija_studenti?characterEncoding=UTF-8", "Duro", "Duro");
             //uspostaviKonekciju = DriverManager.getConnection("jdbc:mysql://95.85.31.158:2083/cpsess4774462758/3rdparty/phpMyAdmin/db_structure.php?server=1&db=upecajst_evidencija&token=29a2d40b6c7e0b37ae9da90522fdd711?characterEncoding=UTF-8", "upecajst_loga", "loga123");
 
@@ -59,7 +59,7 @@ public class SQLController {
         return isBazaPovezana;
     }
       
-      public boolean isBazaSpojena() {
+      public boolean isBazaSpojena() {  //provjera povezanosti
           
         bazaSpojena = provjeraRadaBazePodataka();
         return bazaSpojena;

@@ -1327,7 +1327,7 @@ public class GlavniIzbornik extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    UsersController controller = new UsersController();
+    UsersController controller = new UsersController();  //kreiranje novog objekta
     TerminController controller1 = new TerminController();
     SQLController controllerSQL = new SQLController();
     EvidencijaController controllerEvidencija = new EvidencijaController();
@@ -1357,7 +1357,7 @@ public class GlavniIzbornik extends javax.swing.JFrame {
         }
     }
     
-    private void preuzimanjeKoelgijaOdProfesora(int id) {
+    private void preuzimanjeKoelgijaOdProfesora(int id) { //integer id profesroa za dohvacanje svih kolegija
         
         cmbKolegiji.removeAllItems();
         List<Kolegij> lista;
@@ -1388,7 +1388,7 @@ public class GlavniIzbornik extends javax.swing.JFrame {
         
 
         try {
-            lista = (List<Termin>) controller1.listaTerminaPoKolegiju(id);
+            lista = (List<Termin>) controller1.listaTerminaPoKolegiju(id);   //salje id kolegija
             
             lista.stream().forEach((i) -> {
                 cmbTermin.addItem(i);
@@ -1493,16 +1493,16 @@ public class GlavniIzbornik extends javax.swing.JFrame {
     
     }
     
-    public boolean isUredjajSpojen() {
+    public boolean isUredjajSpojen() {  //funkcija za provjeru da li je uređaj spojen
         
         boolean uredjajSpojen = false;
         
-        com.codeminders.hidapi.ClassPathLibraryLoader.loadNativeHIDLibrary();
+        com.codeminders.hidapi.ClassPathLibraryLoader.loadNativeHIDLibrary();  //poziv drajvera
 
-        HIDDeviceInfo[] devices = null;
+        HIDDeviceInfo[] devices = null;  //klasa uređaja
 
         try {
-            devices = HIDManager.getInstance().listDevices();
+            devices = HIDManager.getInstance().listDevices();   //traženje željenog uređaja s portom
             
             for (HIDDeviceInfo deviceInfo : devices) {
                 if (deviceInfo.getVendor_id() == 49686) {
@@ -1516,7 +1516,7 @@ public class GlavniIzbornik extends javax.swing.JFrame {
         return uredjajSpojen;
     }
     
-    public void otvoriKonfiguraciju(){
+    public void otvoriKonfiguraciju(){  //otvaranje zatvorenih tipki poziv funkcije dole u kodu
         cmbKolegiji.setEnabled(true);
         cmbTermin.setEnabled(true);
         jRadioButtonKPredavanje.setEnabled(true);
@@ -1526,7 +1526,7 @@ public class GlavniIzbornik extends javax.swing.JFrame {
 
     }
     
-    private void dopustiCitanjeKartice() {
+    private void dopustiCitanjeKartice() {   //ukoliko je uređaj spojen dozvoil čitanje kartice (povlacenje na vise mjesta)
         if (isUredjajSpojen()) {
         dopustenoCitanje = true;
         jTextFieldCitacKartice.setVisible(true);
@@ -1548,7 +1548,7 @@ public class GlavniIzbornik extends javax.swing.JFrame {
         System.out.println("DEBUG|GlavniIzbornik|onemoguciCitanjeKartice");
     }
     
-    private void obradiProcitanePodatke() {
+    private void obradiProcitanePodatke() {  //obrađivanje jednog stringa na 3 dijela koje se kasnije unose zasebno
         String procitano = jTextFieldCitacKartice.getText();
         System.out.println("DEBUG|GlavniIzbornik|obradiProcitanePodatke|Procitano " + procitano);
 
@@ -1557,14 +1557,14 @@ public class GlavniIzbornik extends javax.swing.JFrame {
 
         boolean odvajateljPronadjen = false;
 
-        for (char c : procitano.toCharArray()) {
+        for (char c : procitano.toCharArray()) { //povecavanja broja znakova od  %B do &
             if (!odvajateljPronadjen) {
                 if ((c != '%') && (c != 'B') && (c != '&')) {
                     brojIskaznice += c;
                     System.out.println("Broj iskaznice :"+brojIskaznice);
                 }
 
-                if (c == '&') {
+                if (c == '&') {  // odvajatelj koji prikazuje sifru koda
                     odvajateljPronadjen = true;
                     continue;
                 }
@@ -1580,11 +1580,11 @@ public class GlavniIzbornik extends javax.swing.JFrame {
             }
         }
 
-        if (nositeljIskaznice.isEmpty() || brojIskaznice.isEmpty()) {
+        if (nositeljIskaznice.isEmpty() || brojIskaznice.isEmpty()) {  //ukoliko je nositelj prazan izbacuje se greska
             neuspjesnoCitanje();
             System.out.println("DEBUG|GlavniIzbornik|obradiProcitanePodatke|Nositelj iskaznice ili njen broj je prazan");
             
-        } else {
+        } else {   //razdvajanje stringa ANTUN-DURANEC na ANTUN i DURANEC
             String[] nazivStudenta;
             String prezimeStudenta;
             String imeStudenta;
@@ -1595,7 +1595,7 @@ public class GlavniIzbornik extends javax.swing.JFrame {
                 prezimeStudenta = prezimeStudenta.trim();
                 imeStudenta = imeStudenta.trim();
                 
-                uspjesnoCitanje(imeStudenta, prezimeStudenta, brojIskaznice);
+                uspjesnoCitanje(imeStudenta, prezimeStudenta, brojIskaznice);  //funkcija postavlja podatke u predvidene redove za prikaz
                 System.out.println("DEBUG|GlavniIzbornik|obradiProcitanePodatke|Uspjesno citanje");
             } catch (Exception f) {
                 neuspjesnoCitanje();
@@ -1631,15 +1631,15 @@ public class GlavniIzbornik extends javax.swing.JFrame {
         Date datumTermina = odabraniTermin.getDatum();
         predavanje();
    
-            if (controller.provjeriUpisStudentaNaKolegiju(brojIskaznice, sifra_kolegija)==1) {
+            if (controller.provjeriUpisStudentaNaKolegiju(brojIskaznice, sifra_kolegija)==1) {  //provjerava ukoliko je sifra studenta pod odabranim kolegijem)
                 
                 if (controller.provjeriEvidencijuZaStudenta(brojIskaznice, sifra_kolegija,datumTermina)==0){
                     
-                    StudentNaKolegiju StuNaKol = controller.dohvatiCijelogStudentaNaKolegiju(brojIskaznice, sifra_kolegija);
+                    StudentNaKolegiju StuNaKol = controller.dohvatiCijelogStudentaNaKolegiju(brojIskaznice, sifra_kolegija);  //dohvacanje podataka studenta
                
                     Evidencija noviZapis = new Evidencija(StuNaKol.getSifra_studenta_na_kolegiju(),vrstaPredavanja, datumTermina, 1);
 
-                    if (controllerEvidencija.storeEvidencija(noviZapis)) {
+                    if (controllerEvidencija.storeEvidencija(noviZapis)) {   //spremanje zapisa u bazu
                        
                         System.out.println("DEBUG|GlavniIzbornik|uspjesnoCitanje|SpremanjeUnosaEvidencije|Uspjeh");
                         atfBrojIskaznice.setText("Student evidentiran");
@@ -1901,17 +1901,17 @@ public class GlavniIzbornik extends javax.swing.JFrame {
 
     private void cmbKolegijiItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbKolegijiItemStateChanged
         Kolegij odabrani = (Kolegij) cmbKolegiji.getSelectedItem();
-        
-        preuzimanjeTerminaPoKolegiju(odabrani.getSifra_kolegija());
+        //iz određenog polja koji je odabran uzima id
+        preuzimanjeTerminaPoKolegiju(odabrani.getSifra_kolegija()); //poziva se termin i salje kada se odabere kolegij
         
     }//GEN-LAST:event_cmbKolegijiItemStateChanged
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         System.out.println("DEBUG|GlavniIzbornik|jButtonKTestStatusaBazeIUredajaActionPerformed");
-        boolean baza = false;
+        boolean baza = false;    //varijable na false
         boolean uredjaj = false;
 
-        //Provjera povezanosti s bazom
+        //Provjera povezanosti s bazom-funkcija spojena sa sql controllerom
         if (controllerSQL.isBazaSpojena()) {
             baza = true;
             jLabelStatusKBazePodataka.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/databaseOn.png")));
@@ -1921,7 +1921,7 @@ public class GlavniIzbornik extends javax.swing.JFrame {
             System.out.println("DEBUG|GlavniIzbornik|jButtonKTestStatusaBazeIUredajaActionPerformed|Database Off");
         }
 
-        //Provjera povezanosti s citacem
+        //Provjera povezanosti s citacem, promjena ikone
         if (isUredjajSpojen()) {
             uredjaj = true;
             jLabelKStatusUredaja.setIcon(new javax.swing.ImageIcon(getClass().getResource("/picture/cardOn.png")));
@@ -1932,14 +1932,14 @@ public class GlavniIzbornik extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Uređaj nije spojen", "Upozorenje", JOptionPane.WARNING_MESSAGE);
         }
 
-        //if(baza && uredjaj)
+        //if(baza && uredjaj) ukoiko je sve spojeno otvaraju se podaci iz baze
         if (baza && uredjaj) {
             System.out.println("DEBUG|GlavniIzbornik|jButtonKTestStatusaBazeIUredajaActionPerformed|Baza i uređaj spojeni");
             //int sifra = controller.korisnik.getSifra_korisnika();
             //preuzimanjeKoelgijaOdProfesora(sifra);
 
-          otvoriKonfiguraciju();
-           preuzimanjeKoelgijaOdProfesora(controller.korisnik.getSifra_korisnika());
+          otvoriKonfiguraciju();  
+           preuzimanjeKoelgijaOdProfesora(controller.korisnik.getSifra_korisnika());  //prosljedivanje sifre za filtriranje kolegija
             dopustiCitanjeKartice();
         }
         
@@ -1947,11 +1947,11 @@ public class GlavniIzbornik extends javax.swing.JFrame {
 
     private void jTextFieldCitacKarticeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCitacKarticeActionPerformed
         System.out.println("DEBUG|GlavniIzbornik|jTextFieldCitacKarticeActionPerformed");
-        if (dopustenoCitanje) {
+        if (dopustenoCitanje) {   
             System.out.println("DEBUG|GlavniIzbornik|jTextFieldCitacKarticeActionPerformed|Citanje dopusteno");
             //jLabelEStatus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pristup/d/img/working.png")));
             onemoguciCitanjeKartice();
-            obradiProcitanePodatke();
+            obradiProcitanePodatke(); //obrađivanje procitanih podataka
         }
     }//GEN-LAST:event_jTextFieldCitacKarticeActionPerformed
 
@@ -1975,22 +1975,22 @@ public class GlavniIzbornik extends javax.swing.JFrame {
             
             
             
-            if (cmbKolegiji.getSelectedItem() == null) {
+            if (cmbKolegiji.getSelectedItem() == null) { //gleda dali su kolegij i termin odabran
                 JOptionPane.showMessageDialog(this, "Kolegij nije odabran.", "Obavijest", JOptionPane.PLAIN_MESSAGE);
                 System.out.println("DEBUG|GlavniIzbornik|jButtonKPotvrdiActionPerformed|Kolegij nije odabran");
                 return;
             }
             
-            if (cmbTermin.getSelectedItem() == null) {
+            if (cmbTermin.getSelectedItem() == null) {  //termin
                 JOptionPane.showMessageDialog(this, "Termin nije odabran.", "Obavijest", JOptionPane.PLAIN_MESSAGE);
                 System.out.println("DEBUG|GlavniIzbornik|jButtonKPotvrdiActionPerformed|Termin nije odabran");
                 return;
             }
-            
+            //date format
             String formatVremena = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
             String formatDatuma = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
             
-            Termin odabrani = (Termin) cmbTermin.getSelectedItem();
+            Termin odabrani = (Termin) cmbTermin.getSelectedItem();  //uzima se vrijeme od do,
             
             Date datum = odabrani.getDatum();
             String vrijemePocetka = odabrani.getVrijemeOd();
@@ -1999,13 +1999,13 @@ public class GlavniIzbornik extends javax.swing.JFrame {
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             SimpleDateFormat sdfDatum = new SimpleDateFormat("yyyy-MM-dd");
             
-            Date datumSistem = sdfDatum.parse(formatDatuma);
+            Date datumSistem = sdfDatum.parse(formatDatuma);  //
             
-            Date d =sdf.parse(formatVremena);
+            Date d =sdf.parse(formatVremena);  //promjene tipa varijable
             Date d1 = sdf.parse(vrijemePocetka);
             Date d2 = sdf.parse(vrijemeKraja);
             
-            if ( datumSistem.before(datum)){
+            if ( datumSistem.before(datum)){  //uspoređivanje sa sistemski datumom
              JOptionPane.showMessageDialog(this, "DATUM ZA TAJ TERMINA JOŠ NIJE DOŠAO\nMožete unijeti samo današnji termin.", "Obavijest", JOptionPane.PLAIN_MESSAGE);
                 System.out.println("DEBUG|GlavniIzbornik|jButtonKPotvrdiActionPerformed|DATUM ZA TAJ TERMINA JOŠ NIJE DOŠAO");
                 return;}
@@ -2015,12 +2015,12 @@ public class GlavniIzbornik extends javax.swing.JFrame {
                 System.out.println("DEBUG|GlavniIzbornik|jButtonKPotvrdiActionPerformed|DATUM ZA TAJ TERMIN JE PROŠAO");
                 return;}
             
-            if (d.before(d1) ){
+            if (d.before(d1) ){ //provjera vremena prije
              JOptionPane.showMessageDialog(this, "PREDAVANJA JOŠ NISU POČELA ZA TAJ TERMIN.", "Obavijest", JOptionPane.PLAIN_MESSAGE);
                 System.out.println("DEBUG|GlavniIzbornik|jButtonKPotvrdiActionPerformed|PREDAVANJA JOŠ NISU POČELA ZA TAJ TERMIN");
                 return;}
             
-            if (d.after(d2) ){
+            if (d.after(d2) ){  //provjera vremena kasnije
              JOptionPane.showMessageDialog(this, "PREDAVANJA SU ZAVRŠILA ZA TAJ TERMIN.", "Obavijest", JOptionPane.PLAIN_MESSAGE);
                 System.out.println("DEBUG|GlavniIzbornik|jButtonKPotvrdiActionPerformed|PREDAVANJA SU ZAVRŠILA ZA TAJ TERMIN");
                 return;}
@@ -2037,7 +2037,7 @@ public class GlavniIzbornik extends javax.swing.JFrame {
             return;
             }*/
             
-            //konfiguracijaPotvrdena();
+            //konfiguracijaPotvrdena();     ukoliko su uvijeti zadovlejni otvara prozor za učitavanje studenata
             PanelEvidencija.setVisible(true);
             PanelKonfiguracija.setVisible(false);
             dopustiCitanjeKartice();
